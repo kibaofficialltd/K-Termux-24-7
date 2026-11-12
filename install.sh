@@ -3,6 +3,30 @@
 set -e
 cd "$(dirname "$0")"
 
+ORANGE='\033[1;38;5;208m'
+RESET='\033[0m'
+print_banner() {
+  printf "\n${ORANGE}"
+  cat <<'ART'
+██╗  ██╗ ██╗ ██████╗  █████╗
+██║ ██╔╝ ██║ ██╔══██╗ ██╔══██╗
+█████╔╝  ██║ ██████╔╝ ███████║
+██╔═██╗  ██║ ██╔══██╗ ██╔══██║
+██║  ██╗ ██║ ██████╔╝ ██║  ██║
+╚═╝  ╚═╝ ╚═╝ ╚═════╝  ╚═╝  ╚═╝
+██████╗ ███████╗███████╗██╗ ██████╗██╗ █████╗ ██╗
+██╔═══██╗██╔════╝██╔════╝██║██╔════╝██║██╔══██╗██║
+██║   ██║█████╗  █████╗  ██║██║     ██║███████║██║
+██║   ██║██╔══╝  ██╔══╝  ██║██║     ██║██╔══██║██║
+╚██████╔╝██║     ██║     ██║╚██████╗██║██║  ██║███████╗
+ ╚═════╝ ╚═╝     ╚═╝     ╚═╝ ╚═════╝╚═╝╚═╝  ╚═╝╚══════╝
+ART
+  printf "${RESET}\n"
+  printf "${ORANGE}        ★  K I B A   O F F I C I A L  ★${RESET}\n"
+  printf "${ORANGE}     K Termux 24/7 Ultimate - install starting...${RESET}\n\n"
+}
+print_banner
+
 # 1. Detect Termux
 if [ -z "${TERMUX_VERSION:-}" ] && [ ! -d "/data/data/com.termux/files/usr" ]; then
   echo "ERROR: This installer is for Termux on Android."

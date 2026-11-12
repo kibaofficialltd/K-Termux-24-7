@@ -15,6 +15,7 @@ fi
 
 mkdir -p data/logs
 termux-wake-lock 2>/dev/null || true
+printf "\n\033[1;38;5;208m★ KIBA OFFICIAL ★ K Termux 24/7 starting...\033[0m\n"
 nohup node src/index.js >> data/logs/k-termux-server.out 2>&1 &
 echo $! > "$PIDFILE"
 echo "K Termux 24/7 started (pid $(cat "$PIDFILE")). Dashboard: http://127.0.0.1:${KTERMUX_PORT:-7777}/"
