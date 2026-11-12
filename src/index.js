@@ -30,12 +30,19 @@ function initDb() {
     console.log('Database already initialized (admin user exists). Nothing to do.');
     return;
   }
-  const username = 'admin';
+  const username = config.adminUsername || 'admin';
+  if (!/^[A-Za-z0-9_-]{3,32}$/.test(username)) {
+    console.error('ERROR: Username must be 3-32 characters (letters, numbers, _ or -).');
+    process.exit(1);
+  }
   let password = config.adminPassword;
   let generated = false;
   if (!password) {
     password = crypto.randomBytes(12).toString('base64url').slice(0, 16);
     generated = true;
+  } else if (password.length < 8) {
+    console.error('ERROR: Password must be at least 8 characters.');
+    process.exit(1);
   }
   auth.createUser(username, password);
   const creds = `K Termux 24/7 Ultimate - Dashboard credentials\nURL:      http://${config.host}:${config.port}/\nUsername: ${username}\nPassword: ${password}\nCreated:  ${new Date().toISOString()}\n(Change this password in Dashboard -> Security after first login.)\n`;
@@ -56,6 +63,10 @@ function initDb() {
 }
 
 if (process.argv.includes('--init')) { initDb(); process.exit(0); }
+if (process.argv.includes('--check-admin')) {
+  dbm.open();
+  process.exit(auth.countUsers() > 0 ? 0 : 1);
+}
 
 // ---------------- app ----------------
 const app = express();

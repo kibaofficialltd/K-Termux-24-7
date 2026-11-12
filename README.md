@@ -21,6 +21,10 @@ One command — copy-paste this into Termux:
 pkg install -y git nodejs && git clone https://github.com/kibaofficialltd/K-Termux-24-7.git && cd K-Termux-24-7 && bash install.sh && termux-wake-lock
 ```
 
+**During the install you choose your own username and password** — that's what
+you'll use to sign in to the dashboard (input is hidden while typing, and the
+password must be at least 8 characters).
+
 Then open the dashboard: **http://127.0.0.1:7777/**
 
 First-run credentials are printed by the installer and saved to

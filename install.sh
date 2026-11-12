@@ -35,7 +35,33 @@ mkdir -p data/logs data/backups
 
 # 5. Initialize SQLite + generate secure credentials
 echo "[5/9] Initializing database..."
-node src/index.js --init
+if node src/index.js --check-admin 2>/dev/null; then
+  echo "      Admin user already exists - keeping your existing login."
+else
+  echo ""
+  echo "Create your dashboard login (you will use this to sign in):"
+  # username
+  while true; do
+    printf "Username [default: admin]: "
+    read -r IN_USER || { echo; echo "No interactive input available. Re-run install.sh in the Termux app."; exit 1; }
+    IN_USER="${IN_USER:-admin}"
+    if echo "$IN_USER" | grep -qE '^[A-Za-z0-9_-]{3,32}$'; then break; fi
+    echo "  Username must be 3-32 characters: letters, numbers, _ or -. Try again."
+  done
+  # password (hidden input, confirmed twice)
+  while true; do
+    printf "Password (min 8 characters, input hidden): "
+    read -r -s IN_PASS || { echo; echo "No interactive input available. Re-run install.sh in the Termux app."; exit 1; }
+    echo
+    if [ "${#IN_PASS}" -lt 8 ]; then echo "  Too short - at least 8 characters. Try again."; continue; fi
+    printf "Confirm password: "
+    read -r -s IN_PASS2 || { echo; echo "No interactive input available. Re-run install.sh in the Termux app."; exit 1; }
+    echo
+    if [ "$IN_PASS" = "$IN_PASS2" ]; then break; fi
+    echo "  Passwords do not match. Try again."
+  done
+  KTERMUX_ADMIN_USERNAME="$IN_USER" KTERMUX_ADMIN_PASSWORD="$IN_PASS" node src/index.js --init
+fi
 
 # 6. Configure startup scripts (Termux:Boot, optional)
 if [ -d "$HOME/.termux/boot" ]; then

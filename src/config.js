@@ -49,6 +49,7 @@ const config = {
   port: num('KTERMUX_PORT', 7777),
   sessionTtlDays: num('KTERMUX_SESSION_TTL_DAYS', 7),
   netEndpoint: str('KTERMUX_NET_ENDPOINT', 'https://connectivitycheck.gstatic.com/generate_204'),
+  adminUsername: str('KTERMUX_ADMIN_USERNAME', 'admin'),
   adminPassword: str('KTERMUX_ADMIN_PASSWORD', ''),
   version: '1.0.0',
   startedAt: Date.now(),
