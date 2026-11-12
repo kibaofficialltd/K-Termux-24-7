@@ -1,4 +1,4 @@
-// Dummy service used by KIBA 24/7 automated tests.
+// Dummy service used by K Termux 24/7 automated tests.
 // Modes: serve (default) - tiny HTTP server; crash - exits with code 1 immediately.
 'use strict';
 const http = require('http');
@@ -12,7 +12,7 @@ if (mode === 'crash') {
 const port = parseInt(process.env.DUMMY_PORT, 10) || 3457;
 const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/plain' });
-  res.end('kiba-dummy-ok');
+  res.end('k-termux-dummy-ok');
 });
 server.listen(port, '127.0.0.1', () => {
   console.log(`dummy listening on ${port}`);

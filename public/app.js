@@ -1,4 +1,4 @@
-/* KIBA 24/7 ULTIMATE - dashboard client */
+/* K Termux 24/7 Ultimate - dashboard client */
 'use strict';
 
 // ---------- helpers ----------

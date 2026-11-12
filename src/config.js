@@ -1,4 +1,4 @@
-// KIBA 24/7 ULTIMATE - configuration loader (tiny .env parser, no dotenv dependency)
+// K Termux 24/7 Ultimate - configuration loader (tiny .env parser, no dotenv dependency)
 'use strict';
 const fs = require('fs');
 const path = require('path');
@@ -36,20 +36,20 @@ function str(name, def) {
 }
 
 const root = path.join(__dirname, '..');
-const dataDir = path.resolve(root, str('KIBA_DATA_DIR', './data'));
+const dataDir = path.resolve(root, str('KTERMUX_DATA_DIR', './data'));
 
 const config = {
   root,
   dataDir,
   logsDir: path.join(dataDir, 'logs'),
   backupsDir: path.join(dataDir, 'backups'),
-  dbFile: path.join(dataDir, 'kiba.db'),
+  dbFile: path.join(dataDir, 'k-termux.db'),
   credentialsFile: path.join(dataDir, 'credentials.txt'),
-  host: str('KIBA_HOST', '127.0.0.1'),
-  port: num('KIBA_PORT', 7777),
-  sessionTtlDays: num('KIBA_SESSION_TTL_DAYS', 7),
-  netEndpoint: str('KIBA_NET_ENDPOINT', 'https://connectivitycheck.gstatic.com/generate_204'),
-  adminPassword: str('KIBA_ADMIN_PASSWORD', ''),
+  host: str('KTERMUX_HOST', '127.0.0.1'),
+  port: num('KTERMUX_PORT', 7777),
+  sessionTtlDays: num('KTERMUX_SESSION_TTL_DAYS', 7),
+  netEndpoint: str('KTERMUX_NET_ENDPOINT', 'https://connectivitycheck.gstatic.com/generate_204'),
+  adminPassword: str('KTERMUX_ADMIN_PASSWORD', ''),
   version: '1.0.0',
   startedAt: Date.now(),
 };

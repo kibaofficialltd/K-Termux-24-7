@@ -1,7 +1,7 @@
 {
-  "name": "kiba-24-7",
+  "name": "k-termux-24-7",
   "version": "1.0.0",
-  "description": "KIBA 24/7 ULTIMATE - Android Termux personal server management & uptime system",
+  "description": "K Termux 24/7 Ultimate - Android Termux personal server management & uptime system",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
@@ -16,5 +16,5 @@
     "ws": "^8.18.0"
   },
   "license": "MIT",
-  "author": "KIBA"
+  "author": "K Termux"
 }

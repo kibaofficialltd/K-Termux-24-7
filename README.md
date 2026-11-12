@@ -1,4 +1,4 @@
-# KIBA 24/7 ULTIMATE
+# K Termux 24/7 Ultimate
 
 A production-quality personal server management system for Android (Termux):
 process supervisor with a smart watchdog, live web dashboard, authenticated
@@ -18,7 +18,7 @@ Dependencies: express + ws only (both pure JS, Termux-safe)
 One command — copy-paste this into Termux:
 
 ```bash
-pkg install -y git nodejs && git clone https://github.com/kibaofficialltd/KIBA-24-7.git && cd KIBA-24-7 && bash install.sh && termux-wake-lock
+pkg install -y git nodejs && git clone https://github.com/kibaofficialltd/K-Termux-24-7.git && cd K-Termux-24-7 && bash install.sh && termux-wake-lock
 ```
 
 Then open the dashboard: **http://127.0.0.1:7777/**
@@ -68,13 +68,13 @@ src/
   scheduler.js   interval / daily-time schedules (restart/stop/start/backup)
   auth.js        scrypt password hashing, DB sessions, hashed API keys,
                  rate limiting, audit log
-  api.js         KIBA CONTROL API (all endpoints below)
+  api.js         K TERMUX CONTROL API (all endpoints below)
   ws.js          authenticated WebSocket: live events + stats every 5s
 public/
   login.html / index.html / style.css / app.js   dark mobile-first dashboard
 ```
 
-## KIBA CONTROL API
+## K TERMUX CONTROL API
 
 All endpoints require auth (dashboard session cookie or `x-api-key` header),
 except `GET /api/health`. The server binds to **127.0.0.1** by default.
@@ -121,7 +121,7 @@ GET    /api/health                    public, minimal info
 Example:
 
 ```bash
-KEY=kiba_xxxx   # create one in Dashboard → API
+KEY=ktermux_xxxx   # create one in Dashboard → API
 curl -s -H "x-api-key: $KEY" http://127.0.0.1:7777/api/status
 ```
 
@@ -184,7 +184,7 @@ Do **not** port-forward the dashboard to the internet. Instead:
 | No CPU/RAM per service | Some Android kernels restrict `/proc` — metric is labeled n/a |
 | No battery data | Install Termux:API app + `pkg install termux-api` |
 | No notifications | Same as above; also toggle the channel in Dashboard → Notify |
-| Forgot password | Delete `data/kiba.db*` and re-run `node src/index.js --init` (services config is lost; back up first) |
+| Forgot password | Delete `data/k-termux.db*` and re-run `node src/index.js --init` (services config is lost; back up first) |
 | After reboot nothing runs | Run `bash setup-boot.sh`; open the Termux:Boot app once; check battery settings |
 
 ## Security notes

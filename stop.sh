@@ -1,7 +1,7 @@
 #!/data/data/com.termux/files/usr/bin/env bash
-# KIBA 24/7 - stop the server gracefully
+# K Termux 24/7 - stop the server gracefully
 cd "$(dirname "$0")"
-PIDFILE=data/kiba.pid
+PIDFILE=data/k-termux.pid
 if [ ! -f "$PIDFILE" ]; then echo "Not running (no pidfile)."; exit 0; fi
 PID=$(cat "$PIDFILE" 2>/dev/null || true)
 if [ -z "$PID" ] || ! kill -0 "$PID" 2>/dev/null; then
@@ -18,4 +18,4 @@ if kill -0 "$PID" 2>/dev/null; then
 fi
 rm -f "$PIDFILE"
 termux-wake-unlock 2>/dev/null || true
-echo "KIBA 24/7 stopped."
+echo "K Termux 24/7 stopped."

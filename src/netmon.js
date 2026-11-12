@@ -1,4 +1,4 @@
-// KIBA 24/7 ULTIMATE - network monitoring
+// K Termux 24/7 Ultimate - network monitoring
 // Internet connectivity, latency history, outage detection & recovery.
 'use strict';
 const http = require('https');

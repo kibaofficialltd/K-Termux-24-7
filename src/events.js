@@ -1,4 +1,4 @@
-// KIBA 24/7 ULTIMATE - event bus: records events in DB, broadcasts to WebSocket clients
+// K Termux 24/7 Ultimate - event bus: records events in DB, broadcasts to WebSocket clients
 'use strict';
 const dbm = require('./db');
 const logger = require('./logger');

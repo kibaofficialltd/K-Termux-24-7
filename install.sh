@@ -1,5 +1,5 @@
 #!/data/data/com.termux/files/usr/bin/env bash
-# KIBA 24/7 ULTIMATE - installer (Termux, no root required)
+# K Termux 24/7 Ultimate - installer (Termux, no root required)
 set -e
 cd "$(dirname "$0")"
 
@@ -52,7 +52,7 @@ echo "      - Allow 'Run in background' / remove any battery restriction"
 echo "      - Install Termux:API app + run: pkg install termux-api (optional, for notifications)"
 
 # 8. Start the dashboard
-echo "[8/9] Starting KIBA 24/7..."
+echo "[8/9] Starting K Termux 24/7..."
 bash start.sh
 
 # 9. Verify core modules
@@ -61,12 +61,12 @@ echo "[9/9] Verifying..."
 if curl -fsS "http://127.0.0.1:7777/api/health" >/dev/null 2>&1; then
   echo ""
   echo "============================================================"
-  echo "  KIBA 24/7 ULTIMATE is running!"
+  echo "  K Termux 24/7 Ultimate is running!"
   echo "  Dashboard: http://127.0.0.1:7777/"
   echo "  Credentials: cat data/credentials.txt"
   echo "  Keep-alive: run 'termux-wake-lock' now."
   echo "============================================================"
 else
   echo "WARNING: health check did not respond yet. Check: bash status.sh"
-  echo "Logs: data/logs/kiba-server.log"
+  echo "Logs: data/logs/k-termux-server.log"
 fi

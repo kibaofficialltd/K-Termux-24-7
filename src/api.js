@@ -1,4 +1,4 @@
-// KIBA 24/7 ULTIMATE - KIBA CONTROL API (Express)
+// K Termux 24/7 Ultimate - K TERMUX CONTROL API (Express)
 // Auth: session cookie (dashboard) or x-api-key header (programmatic).
 // All control endpoints require authentication and are bound to localhost by default.
 'use strict';
@@ -29,7 +29,7 @@ function clientIp(req) {
 function extractToken(req) {
   if (req.headers['x-api-key']) return req.headers['x-api-key'].trim();
   const cookies = req.headers.cookie || '';
-  const m = /(?:^|;\s*)kiba_session=([\w-]+)/.exec(cookies);
+  const m = /(?:^|;\s*)ktermux_session=([\w-]+)/.exec(cookies);
   return m ? m[1] : null;
 }
 
@@ -75,7 +75,7 @@ router.use(authOptional, apiRate);
 
 // ---------- health (open, minimal info) ----------
 router.get('/health', (_req, res) => {
-  res.json({ ok: true, name: 'KIBA 24/7 ULTIMATE', version: config.version, time: Date.now() });
+  res.json({ ok: true, name: 'K Termux 24/7 Ultimate', version: config.version, time: Date.now() });
 });
 
 // ---------- auth ----------
@@ -90,14 +90,14 @@ router.post('/login', loginRate, (req, res) => {
     return res.status(401).json({ error: 'Invalid credentials' });
   }
   const token = auth.createSession(user.id, clientIp(req));
-  res.setHeader('Set-Cookie', `kiba_session=${token}; HttpOnly; Path=/; SameSite=Lax; Max-Age=${7 * 24 * 3600}`);
+  res.setHeader('Set-Cookie', `ktermux_session=${token}; HttpOnly; Path=/; SameSite=Lax; Max-Age=${7 * 24 * 3600}`);
   auth.audit(user.username, 'login.success', 'session created', clientIp(req));
   res.json({ ok: true, user: { id: user.id, username: user.username, role: user.role } });
 });
 
 router.post('/logout', requireAuth, (req, res) => {
   if (req.user.sessionToken) auth.destroySession(req.user.sessionToken);
-  res.setHeader('Set-Cookie', 'kiba_session=; HttpOnly; Path=/; SameSite=Lax; Max-Age=0');
+  res.setHeader('Set-Cookie', 'ktermux_session=; HttpOnly; Path=/; SameSite=Lax; Max-Age=0');
   auth.audit(req.user.name, 'logout', '', clientIp(req));
   res.json({ ok: true });
 });
@@ -330,7 +330,7 @@ router.post('/notifications', requireAuth, (req, res) => {
 });
 
 router.post('/notifications/test', requireAuth, async (_req, res) => {
-  await notify.notify('KIBA test notification', 'This is a test from your KIBA dashboard.');
+  await notify.notify('K Termux test notification', 'This is a test from your K Termux dashboard.');
   res.json({ ok: true });
 });
 
@@ -379,7 +379,7 @@ router.get('/export/services', requireAuth, (req, res) => {
     env: includeEnv ? s.env : undefined, autostart: s.autostart, healthUrl: s.healthUrl,
     maxRestarts: s.maxRestarts, restartWindowMin: s.restartWindowMin, enabled: s.enabled,
   }));
-  res.setHeader('Content-Disposition', 'attachment; filename="kiba-services.json"');
+  res.setHeader('Content-Disposition', 'attachment; filename="k-termux-services.json"');
   res.json({ exportedAt: new Date().toISOString(), envIncluded: !!includeEnv, services });
 });
 
@@ -415,7 +415,7 @@ const CONSOLE_COMMANDS = {
   ps: () => { try { return fs.readFileSync('/proc/loadavg', 'utf8').trim(); } catch (_) { return 'unavailable'; } },
   disk: () => { try { const st = fs.statfsSync ? require('fs').statfsSync(config.dataDir) : null; return st ? `${Math.round(st.bsize * st.blocks / 1e9)}GB total / ${Math.round(st.bsize * st.bavail / 1e9)}GB free` : 'unavailable'; } catch (_) { return 'unavailable'; } },
   net: () => JSON.stringify(netmon.status()),
-  uptime: () => `kiba-uptime=${Math.round((Date.now() - config.startedAt) / 1000)}s`,
+  uptime: () => `k-termux-uptime=${Math.round((Date.now() - config.startedAt) / 1000)}s`,
 };
 
 router.post('/console', requireAuth, (req, res) => {

@@ -1,7 +1,7 @@
 #!/data/data/com.termux/files/usr/bin/env bash
 cd "$(dirname "$0")"
-PIDFILE=data/kiba.pid
-PORT="${KIBA_PORT:-7777}"
+PIDFILE=data/k-termux.pid
+PORT="${KTERMUX_PORT:-7777}"
 if [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
   echo "Process: running (pid $(cat "$PIDFILE"))"
 else
@@ -14,4 +14,4 @@ else
   echo "API: no response on port $PORT"
 fi
 echo "Recent log:"
-tail -n 5 data/logs/kiba-server.log 2>/dev/null || true
+tail -n 5 data/logs/k-termux-server.log 2>/dev/null || true

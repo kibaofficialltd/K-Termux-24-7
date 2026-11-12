@@ -1,4 +1,4 @@
-// KIBA 24/7 ULTIMATE - system resources (CPU, RAM, per-service usage)
+// K Termux 24/7 Ultimate - system resources (CPU, RAM, per-service usage)
 // Reads /proc directly - works without root. Unavailable metrics are labeled null.
 'use strict';
 const fs = require('fs');

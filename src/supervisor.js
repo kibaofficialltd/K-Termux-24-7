@@ -1,4 +1,4 @@
-// KIBA 24/7 ULTIMATE - process supervisor
+// K Termux 24/7 Ultimate - process supervisor
 // Real child-process management: spawn, stop, restart, crash detection with
 // exponential backoff, restart limits, live logs (ring buffer + rotated files).
 // Never concatenates untrusted input into a shell: always uses spawn(cmd, args).
@@ -19,8 +19,8 @@ const S = new Map();
 const LOG_RING = 500;
 const LOG_MAX_BYTES = 1 * 1024 * 1024;
 const LOG_KEEP = 2;
-const BACKOFF_MIN = parseInt(process.env.KIBA_BACKOFF_MIN_MS, 10) || 5 * 1000;
-const BACKOFF_MAX = parseInt(process.env.KIBA_BACKOFF_MAX_MS, 10) || 5 * 60 * 1000;
+const BACKOFF_MIN = parseInt(process.env.KTERMUX_BACKOFF_MIN_MS, 10) || 5 * 1000;
+const BACKOFF_MAX = parseInt(process.env.KTERMUX_BACKOFF_MAX_MS, 10) || 5 * 60 * 1000;
 
 function safeSlug(name) {
   return name.toLowerCase().replace(/[^a-z0-9_-]+/g, '-').slice(0, 40) || 'service';
@@ -328,7 +328,7 @@ function scheduleAutoRestart(rt, code, signal) {
     events.emit('service.gave-up', 'error',
       `Service "${rt.spec.name}" gave up after ${used} restarts in ${rt.spec.restartWindowMin} min. Manual intervention needed.`,
       rt.spec.id);
-    require('./notify').notify('KIBA: service crashed repeatedly',
+    require('./notify').notify('K Termux: service crashed repeatedly',
       `${rt.spec.name} gave up after ${used} restarts. Check the dashboard.`);
     return;
   }

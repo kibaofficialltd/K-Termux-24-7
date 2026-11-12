@@ -1,4 +1,4 @@
-// KIBA 24/7 ULTIMATE - watchdog
+// K Termux 24/7 Ultimate - watchdog
 // Detects dead processes and unresponsive HTTP services; restarts with limits.
 'use strict';
 const http = require('http');
@@ -9,9 +9,9 @@ const supervisor = require('./supervisor');
 const logger = require('./logger');
 
 let timer = null;
-let intervalMs = parseInt(process.env.KIBA_WATCHDOG_MS, 10) || 15 * 1000;
+let intervalMs = parseInt(process.env.KTERMUX_WATCHDOG_MS, 10) || 15 * 1000;
 const HEALTH_TIMEOUT = 5000;
-const HEALTH_MAX_CONSECUTIVE = parseInt(process.env.KIBA_HEALTH_MAX_FAILS, 10) || 3;
+const HEALTH_MAX_CONSECUTIVE = parseInt(process.env.KTERMUX_HEALTH_MAX_FAILS, 10) || 3;
 // serviceId -> { consecutiveFailures, lastOkAt }
 const healthState = new Map();
 

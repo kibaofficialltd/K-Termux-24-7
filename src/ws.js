@@ -1,4 +1,4 @@
-// KIBA 24/7 ULTIMATE - WebSocket live updates
+// K Termux 24/7 Ultimate - WebSocket live updates
 // Authenticated via session token or API key in query/header; pushes events & stats.
 'use strict';
 const { WebSocketServer } = require('ws');
@@ -20,7 +20,7 @@ function attach(server) {
     if (url.pathname !== '/ws') { socket.destroy(); return; }
     let token = url.searchParams.get('token') || '';
     if (!token) {
-      const m = /(?:^|;\s*)kiba_session=([\w-]+)/.exec(req.headers.cookie || '');
+      const m = /(?:^|;\s*)ktermux_session=([\w-]+)/.exec(req.headers.cookie || '');
       token = m ? m[1] : '';
     }
     const apiKey = req.headers['x-api-key'];

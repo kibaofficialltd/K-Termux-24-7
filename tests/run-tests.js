@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// KIBA 24/7 ULTIMATE - automated test suite
+// K Termux 24/7 Ultimate - automated test suite
 // Boots a real server instance on a test port with an isolated data dir and
 // exercises auth, services CRUD, start/stop/restart, crash recovery, watchdog
 // health checks, API keys, schedules, backups and persistence across restart.
@@ -59,15 +59,15 @@ function cleanData() {
 async function startServer(extraEnv = {}) {
   const child = spawn('node', [path.join(ROOT, 'src', 'index.js')], {
     env: Object.assign({}, process.env, {
-      KIBA_PORT: String(PORT),
-      KIBA_HOST: '127.0.0.1',
-      KIBA_DATA_DIR: DATA,
-      KIBA_ADMIN_PASSWORD: ADMIN_PW,
-      KIBA_BACKOFF_MIN_MS: '400',
-      KIBA_BACKOFF_MAX_MS: '2000',
-      KIBA_WATCHDOG_MS: '1000',
-      KIBA_HEALTH_MAX_FAILS: '2',
-      KIBA_NET_ENDPOINT: 'http://127.0.0.1:1/nope', // force offline detection in tests
+      KTERMUX_PORT: String(PORT),
+      KTERMUX_HOST: '127.0.0.1',
+      KTERMUX_DATA_DIR: DATA,
+      KTERMUX_ADMIN_PASSWORD: ADMIN_PW,
+      KTERMUX_BACKOFF_MIN_MS: '400',
+      KTERMUX_BACKOFF_MAX_MS: '2000',
+      KTERMUX_WATCHDOG_MS: '1000',
+      KTERMUX_HEALTH_MAX_FAILS: '2',
+      KTERMUX_NET_ENDPOINT: 'http://127.0.0.1:1/nope', // force offline detection in tests
     }, extraEnv),
     cwd: ROOT,
     stdio: ['ignore', 'pipe', 'pipe'],
@@ -79,7 +79,7 @@ async function startServer(extraEnv = {}) {
 
 (async function main() {
   cleanData();
-  console.log('== KIBA 24/7 test suite ==');
+  console.log('== K Termux 24/7 test suite ==');
 
   // ---- boot ----
   let server = await startServer();
@@ -87,7 +87,7 @@ async function startServer(extraEnv = {}) {
   check('server boots and /api/health responds',
     await waitFor(async () => (await req('GET', '/api/health')).status === 200, 10000));
   const h = (await req('GET', '/api/health')).json;
-  check('health payload ok', h && h.ok === true && h.name === 'KIBA 24/7 ULTIMATE');
+  check('health payload ok', h && h.ok === true && h.name === 'K Termux 24/7 Ultimate');
 
   // ---- auth ----
   console.log('\n[auth & security]');
@@ -181,7 +181,7 @@ async function startServer(extraEnv = {}) {
   // ---- api keys ----
   console.log('\n[api keys]');
   const keyRes = await req('POST', '/api/apikeys', { headers: AUTH, body: { name: 'test-key' } });
-  check('create api key (raw shown once)', keyRes.status === 201 && /^kiba_[0-9a-f]{48}$/.test(keyRes.json.key));
+  check('create api key (raw shown once)', keyRes.status === 201 && /^ktermux_[0-9a-f]{48}$/.test(keyRes.json.key));
   const key = keyRes.json.key;
   const withKey = await req('GET', '/api/services', { headers: { 'x-api-key': key } });
   check('x-api-key authenticates', withKey.status === 200);

@@ -1,5 +1,5 @@
-// KIBA 24/7 ULTIMATE - rotating logger
-// Writes to data/logs/kiba-server.log with size-based rotation + in-memory tail.
+// K Termux 24/7 Ultimate - rotating logger
+// Writes to data/logs/k-termux-server.log with size-based rotation + in-memory tail.
 'use strict';
 const fs = require('fs');
 const path = require('path');
@@ -7,7 +7,7 @@ const { config, ensureDirs } = require('./config');
 
 ensureDirs();
 
-const LOG_FILE = path.join(config.logsDir, 'kiba-server.log');
+const LOG_FILE = path.join(config.logsDir, 'k-termux-server.log');
 const MAX_BYTES = 2 * 1024 * 1024; // 2 MB per file
 const KEEP = 3;
 const TAIL = 400;
@@ -53,7 +53,7 @@ module.exports = {
   info: (ns, msg) => write('INFO', ns, msg),
   warn: (ns, msg) => write('WARN', ns, msg),
   error: (ns, msg) => write('ERROR', ns, msg),
-  debug: (ns, msg) => { if (process.env.KIBA_DEBUG) write('DEBUG', ns, msg); },
+  debug: (ns, msg) => { if (process.env.KTERMUX_DEBUG) write('DEBUG', ns, msg); },
   tail: (n = 100) => buffer.slice(-Math.max(1, Math.min(n, TAIL))),
   file: LOG_FILE,
 };

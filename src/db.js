@@ -1,4 +1,4 @@
-// KIBA 24/7 ULTIMATE - SQLite layer using node:sqlite (built into Node >= 22.5)
+// K Termux 24/7 Ultimate - SQLite layer using node:sqlite (built into Node >= 22.5)
 'use strict';
 const fs = require('fs');
 const path = require('path');
@@ -140,7 +140,7 @@ function backup(reason = 'manual') {
     db.exec('PRAGMA wal_checkpoint(TRUNCATE);');
   } catch (_) {}
   const stamp = new Date().toISOString().replace(/[:.]/g, '-');
-  const dest = path.join(config.backupsDir, `kiba-${stamp}-${reason}.db`);
+  const dest = path.join(config.backupsDir, `k-termux-${stamp}-${reason}.db`);
   try { fs.copyFileSync(config.dbFile, dest); } catch (e) {
     logger.error('db', 'backup failed: ' + e.message);
     return null;

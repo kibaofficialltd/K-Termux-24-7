@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// KIBA 24/7 ULTIMATE - main entry point
+// K Termux 24/7 Ultimate - main entry point
 'use strict';
 const express = require('express');
 const http = require('http');
@@ -38,7 +38,7 @@ function initDb() {
     generated = true;
   }
   auth.createUser(username, password);
-  const creds = `KIBA 24/7 ULTIMATE - Dashboard credentials\nURL:      http://${config.host}:${config.port}/\nUsername: ${username}\nPassword: ${password}\nCreated:  ${new Date().toISOString()}\n(Change this password in Dashboard -> Security after first login.)\n`;
+  const creds = `K Termux 24/7 Ultimate - Dashboard credentials\nURL:      http://${config.host}:${config.port}/\nUsername: ${username}\nPassword: ${password}\nCreated:  ${new Date().toISOString()}\n(Change this password in Dashboard -> Security after first login.)\n`;
   try {
     fs.writeFileSync(config.credentialsFile, creds, { mode: 0o600 });
     fs.chmodSync(config.credentialsFile, 0o600);
@@ -51,7 +51,7 @@ function initDb() {
     console.log(` Also saved to: ${config.credentialsFile}`);
     console.log('========================================================');
   } else {
-    console.log(`Admin user created with password from KIBA_ADMIN_PASSWORD.`);
+    console.log(`Admin user created with password from KTERMUX_ADMIN_PASSWORD.`);
   }
 }
 
@@ -87,7 +87,7 @@ app.use((err, _req, res, _next) => {
 const server = http.createServer(app);
 server.on('error', (e) => {
   if (e.code === 'EADDRINUSE') {
-    console.error(`FATAL: port ${config.port} already in use (is KIBA already running?).`);
+    console.error(`FATAL: port ${config.port} already in use (is K Termux already running?).`);
     logger.error('main', 'EADDRINUSE port ' + config.port);
     process.exit(1);
   }
@@ -101,7 +101,7 @@ function shutdown(signal) {
   if (shuttingDown) return;
   shuttingDown = true;
   logger.info('main', `shutdown (${signal}) - stopping services gracefully`);
-  events.emit('app.shutdown', 'warn', `KIBA shutting down (${signal})`, null);
+  events.emit('app.shutdown', 'warn', `K Termux shutting down (${signal})`, null);
   watchdog.stop();
   netmon.stop();
   schedulerMod.stop();
@@ -143,7 +143,7 @@ function boot() {
   watchdog.start(15000);
   netmon.start(30000);
   schedulerMod.start(30000);
-  notify.notify('KIBA 24/7 started', `Dashboard running on ${config.host}:${config.port}`, 'app-boot', 10 * 60 * 1000);
+  notify.notify('K Termux 24/7 started', `Dashboard running on ${config.host}:${config.port}`, 'app-boot', 10 * 60 * 1000);
 
   // periodic per-service CPU/mem sampling into runtime views
   setInterval(() => {
@@ -164,12 +164,12 @@ function boot() {
     if (mem && mem.usedPercent > 90) {
       events.emit('system.resource', 'warn',
         `High RAM usage: ${mem.usedPercent}% (${Math.round(mem.usedKb / 1024)} MB used)`, null);
-      notify.notify('KIBA: high RAM usage', `RAM at ${mem.usedPercent}%`, 'resource-ram', 15 * 60 * 1000);
+      notify.notify('K Termux: high RAM usage', `RAM at ${mem.usedPercent}%`, 'resource-ram', 15 * 60 * 1000);
     }
   }, 60 * 1000).unref();
 
   server.listen(config.port, config.host, () => {
-    const msg = `KIBA 24/7 ULTIMATE v${config.version} listening on http://${config.host}:${config.port}`;
+    const msg = `K Termux 24/7 Ultimate v${config.version} listening on http://${config.host}:${config.port}`;
     console.log(msg);
     logger.info('main', msg);
     if (config.host !== '127.0.0.1') {

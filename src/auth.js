@@ -1,4 +1,4 @@
-// KIBA 24/7 ULTIMATE - authentication & security
+// K Termux 24/7 Ultimate - authentication & security
 // scrypt password hashing, DB-backed sessions, hashed API keys, rate limiting, audit log.
 'use strict';
 const crypto = require('crypto');
@@ -80,7 +80,7 @@ function destroyUserSessions(userId) {
 
 function createApiKey(name) {
   const db = dbm.open();
-  const raw = 'kiba_' + crypto.randomBytes(24).toString('hex');
+  const raw = 'ktermux_' + crypto.randomBytes(24).toString('hex');
   const keyHash = crypto.createHash('sha256').update(raw).digest('hex');
   const prefix = raw.slice(0, 9) + '…';
   const r = db.prepare('INSERT INTO api_keys (name,key_hash,key_prefix,created_at) VALUES (?,?,?,?)')
@@ -90,7 +90,7 @@ function createApiKey(name) {
 }
 
 function verifyApiKey(raw) {
-  if (!raw || typeof raw !== 'string' || raw.length > 200 || !raw.startsWith('kiba_')) return null;
+  if (!raw || typeof raw !== 'string' || raw.length > 200 || !raw.startsWith('ktermux_')) return null;
   const keyHash = crypto.createHash('sha256').update(raw).digest('hex');
   const db = dbm.open();
   const k = db.prepare('SELECT * FROM api_keys WHERE key_hash=? AND revoked=0').get(keyHash);

@@ -1,4 +1,4 @@
-// KIBA 24/7 ULTIMATE - scheduled tasks
+// K Termux 24/7 Ultimate - scheduled tasks
 // Interval-based and daily-time schedules for service restart/stop/start + backups.
 'use strict';
 const dbm = require('./db');

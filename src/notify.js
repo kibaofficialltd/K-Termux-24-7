@@ -1,4 +1,4 @@
-// KIBA 24/7 ULTIMATE - notifications
+// K Termux 24/7 Ultimate - notifications
 // Android notifications via Termux:API (optional) + Discord webhook (optional).
 // Webhook secrets are stored in DB settings and never logged or echoed.
 'use strict';
@@ -61,8 +61,8 @@ async function notify(title, body, dedupeKey = null, dedupeMs = 60 * 1000) {
   const webhook = getSetting('discord_webhook', '');
   if (webhook) {
     const ok = await postJson(webhook, {
-      username: 'KIBA 24/7',
-      embeds: [{ title, description: body, color: 0xe5484d, footer: { text: 'KIBA 24/7 ULTIMATE' } }],
+      username: 'K Termux 24/7',
+      embeds: [{ title, description: body, color: 0xe5484d, footer: { text: 'K Termux 24/7 Ultimate' } }],
     });
     if (!ok) logger.warn('notify', 'discord webhook delivery failed (url hidden)');
   }
