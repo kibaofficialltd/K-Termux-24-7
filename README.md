@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="docs/banner.png" alt="K Termux 24/7 Ultimate — KIBA OFFICIAL" width="100%"/>
+</div>
+
 # K Termux 24/7 Ultimate
 
 ![GitHub stars](https://img.shields.io/github/stars/kibaofficialltd/K-Termux-24-7?style=flat&color=e5484d&label=%E2%AD%90%20stars)

@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300" role="img" aria-label="K Termux 24/7 Ultimate banner">
+  <defs>
+    <linearGradient id="bbg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#17171b"/>
+      <stop offset="1" stop-color="#0a0a0c"/>
+    </linearGradient>
+    <linearGradient id="bor" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffb347"/>
+      <stop offset="0.55" stop-color="#ff8c1a"/>
+      <stop offset="1" stop-color="#ff6a00"/>
+    </linearGradient>
+    <pattern id="bscan" width="10" height="10" patternUnits="userSpaceOnUse">
+      <rect width="10" height="2.5" fill="#ffffff" opacity="0.03"/>
+    </pattern>
+  </defs>
+
+  <!-- background -->
+  <rect width="1200" height="300" rx="56" fill="url(#bbg)"/>
+  <rect x="8" y="8" width="1184" height="284" rx="50" fill="none" stroke="#ff7a00" stroke-opacity="0.35" stroke-width="3"/>
+  <rect width="1200" height="300" rx="56" fill="url(#bscan)"/>
+
+  <!-- icon tile -->
+  <rect x="42" y="42" width="216" height="216" rx="44" fill="#0d0d10" stroke="#ff7a00" stroke-opacity="0.5" stroke-width="3"/>
+  <path d="M62 78 L96 100 L62 122" fill="none" stroke="url(#bor)" stroke-width="12" stroke-linecap="square"/>
+  <rect x="112" y="92" width="44" height="12" fill="url(#bor)"/>
+  <rect x="96" y="146" width="42" height="112" fill="url(#bor)"/>
+  <path d="M138 202 L230 162" fill="none" stroke="url(#bor)" stroke-width="38" stroke-linecap="square"/>
+  <path d="M138 202 L230 242" fill="none" stroke="url(#bor)" stroke-width="38" stroke-linecap="square"/>
+
+  <!-- wordmark -->
+  <text x="310" y="150" font-family="'DejaVu Sans Mono','Courier New',monospace" font-weight="bold"
+        font-size="82" fill="#f4f4f5">K TERMUX</text>
+  <text x="310" y="236" font-family="'DejaVu Sans Mono','Courier New',monospace" font-weight="bold"
+        font-size="58" letter-spacing="3" fill="url(#bor)">24/7 ULTIMATE</text>
+
+  <!-- tagline -->
+  <text x="1158" y="66" text-anchor="end" font-family="'DejaVu Sans Mono','Courier New',monospace"
+        font-size="24" letter-spacing="4" fill="#9a9aa3">★ KIBA OFFICIAL</text>
+  <text x="1158" y="258" text-anchor="end" font-family="'DejaVu Sans Mono','Courier New',monospace"
+        font-size="24" letter-spacing="2" fill="#6e6e78">personal server · android · termux</text>
+</svg>
