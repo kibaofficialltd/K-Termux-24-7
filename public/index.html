@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0b0d">
+  <title>KIBA 24/7 ULTIMATE</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="brand">KIBA <span>24/7</span></div>
+      <div class="spacer"></div>
+      <span class="small muted mono" id="wsState">connecting…</span>
+      <div class="net-dot" id="netDot" title="Network status"></div>
+      <button class="small" id="logoutBtn">Exit</button>
+    </header>
+
+    <nav class="tabs" id="tabs">
+      <button data-view="overview" class="active">Overview</button>
+      <button data-view="processes">Processes</button>
+      <button data-view="uptime">Uptime</button>
+      <button data-view="network">Network</button>
+      <button data-view="api">API</button>
+      <button data-view="system">System</button>
+      <button data-view="logs">Logs</button>
+      <button data-view="notifications">Notify</button>
+      <button data-view="settings">Settings</button>
+      <button data-view="security">Security</button>
+    </nav>
+
+    <main>
+      <!-- ============ OVERVIEW ============ -->
+      <section class="view active" id="view-overview">
+        <h2 class="view-title">Overview</h2>
+        <div class="notice hidden" id="noHttpsNotice">
+          This dashboard is meant for localhost or a secure tunnel/VPN. Do not expose the port
+          directly to the public internet.
+        </div>
+        <div class="stat-row">
+          <div class="card accent"><h3>Running</h3><div class="big" id="ovRunning">–</div></div>
+          <div class="card"><h3>Stopped / Crashed</h3><div class="big" id="ovStopped">–</div></div>
+          <div class="card"><h3>App Uptime</h3><div class="big" id="ovUptime">–</div><div class="sub" id="ovUptimeSince"></div></div>
+          <div class="card"><h3>CPU</h3><div class="big" id="ovCpu">–</div><div class="sub" id="ovCores"></div></div>
+          <div class="card"><h3>RAM</h3><div class="big" id="ovRam">–</div><div class="sub" id="ovRamDetail"></div></div>
+          <div class="card"><h3>Network</h3><div class="big" id="ovNet">–</div><div class="sub" id="ovNetLatency"></div></div>
+          <div class="card"><h3>Recent Crashes</h3><div class="big" id="ovCrashes">–</div></div>
+          <div class="card"><h3>Auto Restarts</h3><div class="big" id="ovRestarts">–</div></div>
+          <div class="card"><h3>Monitoring</h3><div class="big" id="ovMonitoring">–</div><div class="sub">watchdog + netmon</div></div>
+        </div>
+        <div class="mt">
+          <div class="card">
+            <h3>Service status</h3>
+            <div id="ovServices" class="empty">Loading…</div>
+          </div>
+        </div>
+        <div class="mt">
+          <div class="card">
+            <h3>Recent events</h3>
+            <table id="ovEvents"><tbody></tbody></table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ PROCESSES ============ -->
+      <section class="view" id="view-processes">
+        <h2 class="view-title">Process Manager
+          <span class="actions">
+            <button class="small" id="restartAllBtn">Restart all</button>
+            <button class="small primary" id="addSvcBtn">+ Add service</button>
+          </span>
+        </h2>
+        <div id="svcList"></div>
+      </section>
+
+      <!-- ============ UPTIME ============ -->
+      <section class="view" id="view-uptime">
+        <h2 class="view-title">Uptime Monitor <span class="actions"><button class="small" id="uptimeRefreshBtn">Refresh</button></span></h2>
+        <div class="muted small" style="margin-bottom:10px">Health checks run every 15s for services that define a Health URL.</div>
+        <div id="uptimeList"></div>
+      </section>
+
+      <!-- ============ NETWORK ============ -->
+      <section class="view" id="view-network">
+        <h2 class="view-title">Network Monitor <span class="actions"><button class="small" id="netRefreshBtn">Refresh</button></span></h2>
+        <div class="stat-row" style="margin-bottom:12px">
+          <div class="card accent"><h3>Status</h3><div class="big" id="netStatus">–</div></div>
+          <div class="card"><h3>Latency</h3><div class="big" id="netLatency">–</div><div class="sub" id="netEndpoint"></div></div>
+        </div>
+        <div class="card">
+          <h3>Latency history (last 200 checks)</h3>
+          <canvas class="spark" id="netChart" height="70"></canvas>
+        </div>
+      </section>
+
+      <!-- ============ API ============ -->
+      <section class="view" id="view-api">
+        <h2 class="view-title">API Manager</h2>
+        <div class="card">
+          <h3>KIBA Control API</h3>
+          <p class="small muted" style="margin:6px 0 10px">Authenticated REST API. Send <code>x-api-key</code> header, or use a dashboard session. Bound to localhost by default.</p>
+          <div class="logbox" id="apiEndpoints"></div>
+        </div>
+        <div class="mt card">
+          <h3>API keys <span class="actions" style="float:right"><button class="small primary" id="addKeyBtn">+ New key</button></span></h3>
+          <div class="table-card mt"><table id="keyTable"><thead>
+            <tr><th>Name</th><th>Key</th><th>Created</th><th>Last used</th><th></th></tr>
+          </thead><tbody></tbody></table></div>
+          <div id="newKeyBox"></div>
+        </div>
+      </section>
+
+      <!-- ============ SYSTEM ============ -->
+      <section class="view" id="view-system">
+        <h2 class="view-title">System Resources</h2>
+        <div class="stat-row">
+          <div class="card"><h3>CPU</h3><div class="big" id="sysCpu">–</div></div>
+          <div class="card"><h3>RAM used</h3><div class="big" id="sysRam">–</div><div class="sub" id="sysRamDetail"></div></div>
+          <div class="card"><h3>Battery</h3><div class="big" id="sysBattery">–</div><div class="sub" id="sysBatteryDetail"></div></div>
+          <div class="card"><h3>Load average</h3><div class="big mono" id="sysLoad" style="font-size:1rem">–</div></div>
+        </div>
+        <div class="mt card">
+          <h3>Per-service resources (where Android permits)</h3>
+          <div class="table-card mt"><table id="sysSvcTable"><thead>
+            <tr><th>Service</th><th>Status</th><th>PID</th><th>CPU</th><th>RAM</th></tr>
+          </thead><tbody></tbody></table></div>
+        </div>
+      </section>
+
+      <!-- ============ LOGS ============ -->
+      <section class="view" id="view-logs">
+        <h2 class="view-title">Logs</h2>
+        <div class="row" style="margin-bottom:10px">
+          <select id="logSource" style="max-width:240px">
+            <option value="server">kiba-server.log</option>
+          </select>
+          <button class="small" id="logRefreshBtn">Refresh</button>
+          <label style="margin:0;display:flex;align-items:center;gap:6px"><input type="checkbox" id="logLive" style="width:auto"> Follow</label>
+        </div>
+        <div class="logbox" id="logBox" style="max-height:60vh">Loading…</div>
+      </section>
+
+      <!-- ============ NOTIFICATIONS ============ -->
+      <section class="view" id="view-notifications">
+        <h2 class="view-title">Notifications</h2>
+        <div class="card">
+          <h3>Channels</h3>
+          <label style="display:flex;align-items:center;gap:10px;margin-top:12px">
+            <input type="checkbox" id="ntTermux" style="width:auto"> Android notifications (Termux:API - requires <code>pkg install termux-api</code> + the Termux:API app)
+          </label>
+          <label for="ntWebhook">Discord webhook (stored server-side, never shown in logs)</label>
+          <input id="ntWebhook" placeholder="https://discord.com/api/webhooks/...">
+          <div class="row mt">
+            <button class="primary" id="ntSaveBtn">Save</button>
+            <button id="ntTestBtn">Send test</button>
+          </div>
+          <p class="small muted mt">Notifications: service crashes, recovery, network loss, repeated crashes, high RAM.</p>
+        </div>
+      </section>
+
+      <!-- ============ SETTINGS ============ -->
+      <section class="view" id="view-settings">
+        <h2 class="view-title">Settings</h2>
+        <div class="card">
+          <h3>Connectivity check endpoint</h3>
+          <label for="setEndpoint">URL used to detect internet connectivity (should return 204)</label>
+          <div class="row"><input id="setEndpoint" placeholder="https://connectivitycheck.gstatic.com/generate_204"></div>
+          <div class="mt"><button class="primary" id="setSaveBtn">Save</button></div>
+        </div>
+        <div class="mt card">
+          <h3>Scheduled tasks</h3>
+          <div class="row mt">
+            <select id="schSvc" style="max-width:180px"><option value="">All services / none</option></select>
+            <select id="schAction" style="max-width:120px">
+              <option value="restart">restart</option><option value="stop">stop</option>
+              <option value="start">start</option><option value="backup">backup</option>
+            </select>
+            <input id="schInterval" type="number" min="1" placeholder="every N min" style="max-width:130px">
+            <input id="schTime" placeholder="or daily HH:MM" style="max-width:140px">
+            <button class="primary small" id="schAddBtn">Add</button>
+          </div>
+          <div class="table-card mt"><table id="schTable"><thead>
+            <tr><th>ID</th><th>Action</th><th>Target</th><th>Every</th><th>Next run</th><th></th></tr>
+          </thead><tbody></tbody></table></div>
+        </div>
+        <div class="mt card">
+          <h3>Backups</h3>
+          <div class="row"><button class="primary" id="backupBtn">Create backup now</button></div>
+          <div class="table-card mt"><table id="backupTable"><thead>
+            <tr><th>File</th><th>Size</th><th>Created</th></tr>
+          </thead><tbody></tbody></table></div>
+        </div>
+        <div class="mt card">
+          <h3>Export</h3>
+          <p class="small muted" style="margin:6px 0">Service configuration export - secrets (env values) excluded by default.</p>
+          <div class="row">
+            <button class="small" onclick="location.href='/api/export/services?env=0'">Export services (no secrets)</button>
+            <button class="small" onclick="location.href='/api/export/services?env=1'">Export with env values</button>
+          </div>
+        </div>
+        <div class="mt card">
+          <h3>Diagnostics console <span class="badge">localhost only</span></h3>
+          <p class="small muted" style="margin:6px 0">Allowlisted commands only - this is not a shell.</p>
+          <div class="row">
+            <input id="conCmd" placeholder="overview / ps / disk / net / uptime" style="max-width:300px">
+            <button class="primary small" id="conRunBtn">Run</button>
+          </div>
+          <div class="logbox mt" id="conOut">—</div>
+        </div>
+      </section>
+
+      <!-- ============ SECURITY ============ -->
+      <section class="view" id="view-security">
+        <h2 class="view-title">Security</h2>
+        <div class="card">
+          <h3>Change password</h3>
+          <label for="secCur">Current password</label>
+          <input id="secCur" type="password" autocomplete="current-password">
+          <label for="secNew">New password (min 8 chars)</label>
+          <input id="secNew" type="password" autocomplete="new-password">
+          <div class="mt"><button class="primary" id="secSaveBtn">Change password</button></div>
+          <p class="small muted mt">Changing the password revokes all active sessions.</p>
+        </div>
+        <div class="mt card">
+          <h3>Audit log</h3>
+          <div class="table-card mt"><table id="auditTable"><thead>
+            <tr><th>Time</th><th>User</th><th>Action</th><th>Detail</th><th>IP</th></tr>
+          </thead><tbody></tbody></table></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- service add/edit modal -->
+  <div class="modal-back" id="svcModal">
+    <div class="modal">
+      <h2 id="svcModalTitle">Add service</h2>
+      <label for="fName">Name *</label>
+      <input id="fName" placeholder="my-bot">
+      <label for="fGroup">Group</label>
+      <select id="fGroup">
+        <option>Bots</option><option>APIs</option><option>AI Agents</option>
+        <option>Minecraft</option><option>Other</option>
+      </select>
+      <label for="fCommand">Command * (executable only - no shell string, e.g. "node" or "python")</label>
+      <input id="fCommand" placeholder="node">
+      <label for="fArgs">Arguments (one per line)</label>
+      <textarea id="fArgs" placeholder="server.js&#10;--port&#10;3000"></textarea>
+      <label for="fCwd">Working directory (optional)</label>
+      <input id="fCwd" placeholder="/data/data/com.termux/files/home/myproject">
+      <label for="fEnv">Environment variables (KEY=value, one per line)</label>
+      <textarea id="fEnv" placeholder="PORT=3000&#10;NODE_ENV=production"></textarea>
+      <label for="fHealth">Health URL (optional - enables watchdog HTTP checks)</label>
+      <input id="fHealth" placeholder="http://127.0.0.1:3000/health">
+      <div class="row" style="margin-top:12px">
+        <label style="margin:0;display:flex;align-items:center;gap:8px"><input type="checkbox" id="fAuto" style="width:auto"> Start automatically</label>
+      </div>
+      <div class="grid cols-2 mt">
+        <div><label for="fMaxRestarts">Max restarts / window</label><input id="fMaxRestarts" type="number" value="10" min="1" max="100"></div>
+        <div><label for="fWindowMin">Window (minutes)</label><input id="fWindowMin" type="number" value="10" min="1" max="1440"></div>
+      </div>
+      <div class="modal-actions">
+        <button id="svcCancelBtn">Cancel</button>
+        <button class="primary" id="svcSaveBtn">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toasts"></div>
+  <script src="/app.js"></script>
+</body>
+</html>

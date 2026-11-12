@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0b0d">
+  <title>KIBA 24/7 - Login</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="login-wrap">
+    <form class="login-card" id="loginForm">
+      <div class="logo">
+        <h1>KIBA <span>24/7</span></h1>
+        <p>ULTIMATE &middot; Personal Server Control</p>
+      </div>
+      <label for="username">Username</label>
+      <input id="username" autocomplete="username" required>
+      <label for="password">Password</label>
+      <input id="password" type="password" autocomplete="current-password" required>
+      <div class="login-error" id="err"></div>
+      <button class="primary" style="width:100%;margin-top:12px" type="submit">Sign in</button>
+    </form>
+  </div>
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const err = document.getElementById('err');
+      err.textContent = '';
+      try {
+        const r = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: document.getElementById('username').value,
+            password: document.getElementById('password').value,
+          }),
+        });
+        const j = await r.json();
+        if (!r.ok) { err.textContent = j.error || 'Login failed'; return; }
+        location.href = '/';
+      } catch (_) {
+        err.textContent = 'Cannot reach server';
+      }
+    });
+  </script>
+</body>
+</html>

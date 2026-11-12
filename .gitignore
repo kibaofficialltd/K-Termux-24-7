@@ -1,0 +1,18 @@
+# Runtime data (contains DB with password hashes + credentials.txt)
+data/
+data-test/
+
+# Dependencies
+node_modules/
+
+# Local secrets
+.env
+*.pem
+credentials.txt
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+nohup.out

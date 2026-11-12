@@ -1,0 +1,20 @@
+{
+  "name": "kiba-24-7",
+  "version": "1.0.0",
+  "description": "KIBA 24/7 ULTIMATE - Android Termux personal server management & uptime system",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "init": "node src/index.js --init",
+    "test": "node tests/run-tests.js"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "ws": "^8.18.0"
+  },
+  "license": "MIT",
+  "author": "KIBA"
+}
