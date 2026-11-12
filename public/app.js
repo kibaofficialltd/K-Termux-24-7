@@ -423,7 +423,14 @@ $('ntTestBtn').addEventListener('click', async () => {
 });
 
 // ---------- settings ----------
+function renderWake(st) {
+  $('wakeStatus').innerHTML = st.timerActive
+    ? `😴 Awake for <b>${st.remainingHuman}</b> more (${st.remainingSec.toLocaleString()}s remaining) — until ${new Date(st.wakeUntil).toLocaleString()}`
+    : '😴 No wake timer active — phone can sleep normally (Android may still kill Termux; battery settings still matter).';
+}
+
 async function loadSettings() {
+  try { renderWake(await api('/wake')); } catch (_) {}
   const { settings } = await api('/settings');
   $('setEndpoint').value = settings.net_endpoint || '';
   // schedules
@@ -475,6 +482,22 @@ $('backupBtn').addEventListener('click', async () => {
   try { const r = await api('/backup', { method: 'POST', body: '{}' }); toast('Backup created: ' + r.file.split('/').pop()); loadSettings(); }
   catch (e) { toast(e.message, 'error'); }
 });
+$('wakeSetBtn').addEventListener('click', async () => {
+  try { renderWake(await api('/wake', { method: 'POST', body: JSON.stringify({ seconds: parseInt($('wakeSec').value, 10) }) })); toast('Wake timer set'); }
+  catch (e) { toast(e.message, 'error'); }
+});
+$('wakeCancelBtn').addEventListener('click', async () => {
+  try { renderWake(await api('/wake/cancel', { method: 'POST', body: '{}' })); toast('Wake timer cancelled', 'info'); }
+  catch (e) { toast(e.message, 'error'); }
+});
+$('wakePresets').addEventListener('click', async (e) => {
+  const b = e.target.closest('button[data-sec]');
+  if (!b) return;
+  try { renderWake(await api('/wake', { method: 'POST', body: JSON.stringify({ seconds: parseInt(b.dataset.sec, 10) }) })); toast('Awake for ' + b.textContent); }
+  catch (err) { toast(err.message, 'error'); }
+});
+setInterval(() => { if (document.querySelector('#view-settings.active')) api('/wake').then(renderWake).catch(() => {}); }, 30000);
+
 $('conRunBtn').addEventListener('click', async () => {
   try {
     const r = await api('/console', { method: 'POST', body: JSON.stringify({ command: $('conCmd').value.trim() }) });

@@ -16,6 +16,7 @@ const netmon = require('./netmon');
 const sysmon = require('./system');
 const events = require('./events');
 const schedulerMod = require('./scheduler');
+const wake = require('./wake');
 const notify = require('./notify');
 const apiRouter = require('./api');
 const ws = require('./ws');
@@ -159,6 +160,7 @@ function boot() {
   watchdog.start(15000);
   netmon.start(30000);
   schedulerMod.start(30000);
+  wake.restoreOnBoot();
   notify.notify('K Termux 24/7 started', `Dashboard running on ${config.host}:${config.port}`, 'app-boot', 10 * 60 * 1000);
 
   // periodic per-service CPU/mem sampling into runtime views

@@ -220,6 +220,19 @@ async function startServer(extraEnv = {}) {
   const denied = await req('POST', '/api/console', { headers: AUTH, body: { command: 'rm -rf /' } });
   check('non-allowlisted console command rejected', denied.status === 400);
 
+  // ---- keep-awake timer ----
+  console.log('\n[wake timer]');
+  const wk = await req('POST', '/api/wake', { headers: AUTH, body: { seconds: 5 } });
+  check('wake timer set', wk.status === 200 && wk.json.timerActive === true, JSON.stringify(wk.json));
+  check('wake status reports remaining time', (await req('GET', '/api/wake', { headers: AUTH })).json.remainingSec >= 4);
+  const wkMax = await req('POST', '/api/wake', { headers: AUTH, body: { seconds: 999999999 } });
+  check('wake seconds capped at 31 days', wkMax.status === 200 && wkMax.json.remainingSec <= 2678400);
+  const wkBad = await req('POST', '/api/wake', { headers: AUTH, body: { seconds: 'abc' } });
+  check('invalid wake seconds rejected', wkBad.status === 400);
+  check('wake timer survives in settings (server restart re-arms it)', fs.existsSync(path.join(DATA, 'k-termux.db')));
+  check('wake cancel works', (await req('POST', '/api/wake/cancel', { headers: AUTH, body: '{}' })).status === 200);
+  check('wake inactive after cancel', (await req('GET', '/api/wake', { headers: AUTH })).json.timerActive === false);
+
   // ---- direct access mode (skip login on this phone) ----
   console.log('\n[direct access mode]');
   await req('POST', '/api/settings', { headers: AUTH, body: { auth_disabled: true } });

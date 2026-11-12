@@ -1,10 +1,23 @@
 # K Termux 24/7 Ultimate
 
+![GitHub stars](https://img.shields.io/github/stars/kibaofficialltd/K-Termux-24-7?style=flat&color=e5484d&label=%E2%AD%90%20stars)
+![GitHub forks](https://img.shields.io/github/forks/kibaofficialltd/K-Termux-24-7?style=flat&color=e5484d&label=%F0%9F%8D%B4%20forks)
+![GitHub issues](https://img.shields.io/github/issues/kibaofficialltd/K-Termux-24-7?style=flat&color=f5a524&label=issues)
+![License](https://img.shields.io/badge/license-MIT-46a758)
+![Platform](https://img.shields.io/badge/platform-Android%20%7C%20Termux-131316)
+![Node](https://img.shields.io/badge/node-%E2%89%A522.5-e5484d)
+
 A production-quality personal server management system for Android (Termux):
 process supervisor with a smart watchdog, live web dashboard, authenticated
 REST API, network monitoring, notifications, schedules, backups and security —
 built with real process management and persistent configuration. No fake
 metrics, no simulated services.
+
+> ## 📘 READ THE GUIDE
+> **Everything is explained step-by-step in [GUIDE.md](GUIDE.md)** — adding
+> services, health URLs, command tricks, bots, 24/7 setup, remote access,
+> troubleshooting. This README is the short version; the guide is the full
+> manual.
 
 ```
 Node.js >= 22.5 (uses built-in SQLite) · Express · WebSocket
@@ -12,10 +25,6 @@ Dependencies: express + ws only (both pure JS, Termux-safe)
 ```
 
 ---
-
-- **New here? Read [GUIDE.md](GUIDE.md) — the complete step-by-step guide:**
-  adding services, health URLs, command-line tricks, bots, 24/7 setup,
-  remote access and troubleshooting.
 
 ## Quick start (Termux)
 
@@ -51,6 +60,55 @@ Then in Android Settings: **Apps → Termux → Battery → Unrestricted**
 below — a phone can be interrupted by force-stop, reboot, heat or power loss.
 For services that absolutely must stay up, a cheap cloud VPS is more reliable;
 this system makes a phone as reliable as Android allows.
+
+## ⏰ Keep-awake timer — choose exactly how long
+
+Android lets you hold a **wake lock** so Termux isn't killed in the background.
+K Termux adds a **timer** on top: you say how many seconds the phone should
+stay awake, and it unlocks **automatically** when time is up. Works from
+1 second up to **31 days** (2,678,400 seconds).
+
+### The command
+
+```bash
+cd ~/K-Termux-24-7
+bash wake.sh <seconds>
+```
+
+| You type | Means | |
+|---|---|---|
+| `bash wake.sh 60` | awake for **1 minute** | |
+| `bash wake.sh 3600` | awake for **1 hour** | |
+| `bash wake.sh 28800` | awake for **8 hours** (a work day) | |
+| `bash wake.sh 86400` | awake for **1 day** | |
+| `bash wake.sh 604800` | awake for **7 days** | |
+| `bash wake.sh 2592000` | awake for **30 days** | |
+| `bash wake.sh 2678400` | awake for **31 days** (maximum) | |
+| `bash wake.sh cancel` | cancel the timer, unlock **now** | |
+
+### How it behaves
+
+- ✅ Counts down and runs `termux-wake-unlock` **automatically** when time ends
+- ✅ **Survives server restarts** — if Termux/Node restarts mid-timer, the
+  remaining time is restored and the unlock still happens on schedule
+- ✅ Dashboard: **Settings → Keep awake** — one-tap presets (5 min → 30 days),
+  live countdown, cancel button
+- ✅ Every set/cancel/expire is recorded in the event log
+- ⚠️ Honest limits: a wake lock is not magic. Android can still kill Termux
+  on force-stop or extreme memory pressure, and "awake" drains battery —
+  keep the phone charged for long timers. Battery-unrestricted Termux
+  settings are still recommended.
+
+### Via the API (for your scripts)
+
+```bash
+curl -s -X POST http://127.0.0.1:7777/api/wake \
+  -H 'Content-Type: application/json' -d '{"seconds":3600}'
+curl -s http://127.0.0.1:7777/api/wake            # status + remaining time
+curl -s -X POST http://127.0.0.1:7777/api/wake/cancel
+```
+
+---
 
 ## Everyday commands
 

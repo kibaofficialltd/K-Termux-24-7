@@ -169,6 +169,24 @@
           <div class="mt"><button class="primary" id="setSaveBtn">Save</button></div>
         </div>
         <div class="mt card">
+          <h3>Keep awake (wake timer)</h3>
+          <p class="small muted" style="margin:6px 0">Choose exactly how long the phone stays awake. The wake lock is released automatically when the time runs out — even if the server restarts meanwhile.</p>
+          <div class="row">
+            <input id="wakeSec" type="number" min="1" placeholder="seconds (e.g. 3600 = 1 hour)" style="max-width:260px">
+            <button class="primary small" id="wakeSetBtn">Set timer</button>
+            <button class="small" id="wakeCancelBtn">Cancel</button>
+          </div>
+          <div class="row mt" id="wakePresets">
+            <button class="small" data-sec="300">5 min</button>
+            <button class="small" data-sec="3600">1 hour</button>
+            <button class="small" data-sec="28800">8 hours</button>
+            <button class="small" data-sec="86400">1 day</button>
+            <button class="small" data-sec="604800">7 days</button>
+            <button class="small" data-sec="2592000">30 days</button>
+          </div>
+          <div class="small mt" id="wakeStatus">—</div>
+        </div>
+        <div class="mt card">
           <h3>Scheduled tasks</h3>
           <div class="row mt">
             <select id="schSvc" style="max-width:180px"><option value="">All services / none</option></select>

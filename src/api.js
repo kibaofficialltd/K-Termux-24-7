@@ -15,6 +15,7 @@ const sysmon = require('./system');
 const events = require('./events');
 const schedulerMod = require('./scheduler');
 const notify = require('./notify');
+const wake = require('./wake');
 const logger = require('./logger');
 const { config } = require('./config');
 
@@ -347,6 +348,27 @@ router.post('/notifications', requireAuth, (req, res) => {
 router.post('/notifications/test', requireAuth, async (_req, res) => {
   await notify.notify('K Termux test notification', 'This is a test from your K Termux dashboard.');
   res.json({ ok: true });
+});
+
+// ---------- keep-awake timer ----------
+router.get('/wake', requireAuth, (_req, res) => {
+  res.json(wake.status());
+});
+
+router.post('/wake', requireAuth, async (req, res) => {
+  try {
+    const st = await wake.set((req.body || {}).seconds);
+    auth.audit(req.user.name, 'wake.set', `${st.remainingHuman} (${st.remainingSec}s)`, clientIp(req));
+    res.json(Object.assign({ ok: true }, st));
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+router.post('/wake/cancel', requireAuth, async (req, res) => {
+  const st = await wake.cancel();
+  auth.audit(req.user.name, 'wake.cancel', '', clientIp(req));
+  res.json(Object.assign({ ok: true }, st));
 });
 
 // ---------- settings ----------
