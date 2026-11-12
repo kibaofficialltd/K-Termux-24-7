@@ -18,10 +18,8 @@ Dependencies: express + ws only (both pure JS, Termux-safe)
 One command — copy-paste this into Termux:
 
 ```bash
-pkg install -y git nodejs && git clone https://github.com/YOUR-USERNAME/KIBA-24-7.git && cd KIBA-24-7 && bash install.sh && termux-wake-lock
+pkg install -y git nodejs && git clone https://github.com/kibaofficialltd/KIBA-24-7.git && cd KIBA-24-7 && bash install.sh && termux-wake-lock
 ```
-
-> Replace `YOUR-USERNAME` with the GitHub account that hosts this repository.
 
 Then open the dashboard: **http://127.0.0.1:7777/**
 
