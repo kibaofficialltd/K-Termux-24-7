@@ -214,6 +214,17 @@
       <section class="view" id="view-security">
         <h2 class="view-title">Security</h2>
         <div class="card">
+          <h3>Direct access (this phone only)</h3>
+          <label style="display:flex;align-items:center;gap:10px;margin-top:12px">
+            <input type="checkbox" id="secNoAuth" style="width:auto">
+            Skip login on this phone - open the dashboard directly
+          </label>
+          <p class="small muted mt">When on, no username/password is asked on this phone (localhost).
+          Remote/tunneled access still requires a login or API key. Anyone holding the phone
+          can open the dashboard while this is on.</p>
+          <div class="mt"><button class="primary" id="secNoAuthBtn">Save access mode</button></div>
+        </div>
+        <div class="mt card">
           <h3>Change password</h3>
           <label for="secCur">Current password</label>
           <input id="secCur" type="password" autocomplete="current-password">

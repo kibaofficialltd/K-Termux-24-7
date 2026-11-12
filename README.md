@@ -195,6 +195,10 @@ Do **not** port-forward the dashboard to the internet. Instead:
 
 - Passwords hashed with **scrypt** (built-in `crypto`), sessions in SQLite
   with expiry, `HttpOnly` cookies, `SameSite=Lax`
+- **Direct access mode (optional):** Dashboard → Security → *Skip login on
+  this phone*. On = opening `http://127.0.0.1:7777/` goes straight in with no
+  login. Only localhost is trusted — remote/tunneled access still requires
+  login or an API key. Off by default.
 - API keys stored **hashed** (SHA-256); raw key shown exactly once at creation
 - Rate limits: 240 req/min per IP on the API, 10 login attempts / 15 min
 - Audit log for every sensitive action

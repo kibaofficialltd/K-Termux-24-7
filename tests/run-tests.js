@@ -214,6 +214,15 @@ async function startServer(extraEnv = {}) {
   const denied = await req('POST', '/api/console', { headers: AUTH, body: { command: 'rm -rf /' } });
   check('non-allowlisted console command rejected', denied.status === 400);
 
+  // ---- direct access mode (skip login on this phone) ----
+  console.log('\n[direct access mode]');
+  await req('POST', '/api/settings', { headers: AUTH, body: { auth_disabled: true } });
+  check('localhost request allowed without login when direct access is on',
+    (await req('GET', '/api/services')).status === 200);
+  await req('POST', '/api/settings', { headers: AUTH, body: { auth_disabled: false } });
+  check('login required again after direct access is turned off',
+    (await req('GET', '/api/services')).status === 401);
+
   // ---- persistence across restart ----
   console.log('\n[persistence across app restart]');
   process.kill(server.pid, 'SIGTERM');

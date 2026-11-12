@@ -484,12 +484,21 @@ $('conRunBtn').addEventListener('click', async () => {
 
 // ---------- security ----------
 async function loadSecurity() {
+  const { settings } = await api('/settings');
+  $('secNoAuth').checked = settings.auth_disabled === '1';
   const { audit } = await api('/audit?limit=80');
   $('auditTable').querySelector('tbody').innerHTML = audit.length ? audit.reverse().map((a) =>
     `<tr><td class="small muted">${new Date(a.at).toLocaleString()}</td><td>${esc(a.user)}</td>
      <td><span class="badge info">${esc(a.action)}</span></td><td class="small">${esc(a.detail)}</td><td class="small muted mono">${esc(a.ip)}</td></tr>`
   ).join('') : '<tr><td colspan="5" class="muted">No audit entries</td></tr>';
 }
+$('secNoAuthBtn').addEventListener('click', async () => {
+  try {
+    await api('/settings', { method: 'POST', body: JSON.stringify({ auth_disabled: $('secNoAuth').checked }) });
+    toast('Access mode saved', 'info');
+    if (!$('secNoAuth').checked) setTimeout(() => location.href = '/login', 800);
+  } catch (e) { toast(e.message, 'error'); }
+});
 $('secSaveBtn').addEventListener('click', async () => {
   try {
     await api('/password', {

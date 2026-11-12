@@ -26,6 +26,14 @@ function clientIp(req) {
   return req.ip || req.socket.remoteAddress || 'unknown';
 }
 
+function isLoopback(ip) {
+  return /^(127\.0\.0\.1|::1|::ffff:127\.0\.0\.1)$/.test(ip);
+}
+
+function directAccessEnabled() {
+  try { return notify.getSetting('auth_disabled', '0') === '1'; } catch (_) { return false; }
+}
+
 function extractToken(req) {
   if (req.headers['x-api-key']) return req.headers['x-api-key'].trim();
   const cookies = req.headers.cookie || '';
@@ -35,6 +43,11 @@ function extractToken(req) {
 
 // attaches req.user { id, username, via } when authenticated
 function authOptional(req, _res, next) {
+  // Direct-access mode: trusted localhost requests skip login entirely
+  if (directAccessEnabled() && isLoopback(clientIp(req))) {
+    req.user = { id: null, name: 'local', via: 'local', role: 'admin' };
+    return next();
+  }
   const token = extractToken(req);
   if (req.headers['x-api-key']) {
     const k = auth.verifyApiKey(req.headers['x-api-key'].trim());
@@ -349,6 +362,12 @@ router.post('/settings', requireAuth, (req, res) => {
     if (v && !/^https?:\/\//.test(v)) return res.status(400).json({ error: 'net_endpoint must be an http(s) URL' });
     notify.setSetting('net_endpoint', v);
   }
+  if (b.auth_disabled !== undefined) {
+    const enable = b.auth_disabled === true || b.auth_disabled === '1' || b.auth_disabled === 1;
+    notify.setSetting('auth_disabled', enable ? '1' : '0');
+    auth.audit(req.user.name, enable ? 'auth.disabled' : 'auth.enabled',
+      enable ? 'login skipped for this phone (localhost only)' : 'login required again', clientIp(req));
+  }
   auth.audit(req.user.name, 'settings.update', '', clientIp(req));
   res.json({ ok: true });
 });
@@ -425,7 +444,7 @@ router.post('/console', requireAuth, (req, res) => {
   }
   // console is restricted to local (loopback) sessions
   const ip = clientIp(req);
-  if (!/^(127\.0\.0\.1|::1|::ffff:127\.0\.0\.1)$/.test(ip)) {
+  if (!isLoopback(ip)) {
     return res.status(403).json({ error: 'Console restricted to localhost sessions' });
   }
   let out;

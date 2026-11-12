@@ -23,6 +23,8 @@
     </form>
   </div>
   <script>
+    // Direct-access mode: if no login is required on this phone, go straight in
+    fetch('/api/me').then((r) => { if (r.ok) location.href = '/'; }).catch(() => {});
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const err = document.getElementById('err');
