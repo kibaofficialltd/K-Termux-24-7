@@ -31,7 +31,9 @@ function isLoopback(ip) {
 }
 
 function directAccessEnabled() {
-  try { return notify.getSetting('auth_disabled', '0') === '1'; } catch (_) { return false; }
+  // Default ON: this is a personal phone tool - localhost is trusted unless
+  // the user explicitly disabled it (Security tab or KTERMUX_REQUIRE_LOGIN=1).
+  try { return notify.getSetting('auth_disabled', '1') === '1'; } catch (_) { return true; }
 }
 
 function extractToken(req) {

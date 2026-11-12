@@ -485,7 +485,7 @@ $('conRunBtn').addEventListener('click', async () => {
 // ---------- security ----------
 async function loadSecurity() {
   const { settings } = await api('/settings');
-  $('secNoAuth').checked = settings.auth_disabled === '1';
+  $('secNoAuth').checked = (settings.auth_disabled ?? '1') === '1';
   const { audit } = await api('/audit?limit=80');
   $('auditTable').querySelector('tbody').innerHTML = audit.length ? audit.reverse().map((a) =>
     `<tr><td class="small muted">${new Date(a.at).toLocaleString()}</td><td>${esc(a.user)}</td>

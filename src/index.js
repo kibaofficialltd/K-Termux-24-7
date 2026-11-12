@@ -24,7 +24,12 @@ ensureDirs();
 
 // ---------------- CLI: --init ----------------
 function initDb() {
-  dbm.open();
+  const db = dbm.open();
+  // Direct access by default: no login asked on this phone.
+  // Opt out with KTERMUX_REQUIRE_LOGIN=1 (or via Dashboard -> Security later).
+  if (env.KTERMUX_REQUIRE_LOGIN !== '1' && env.KTERMUX_REQUIRE_LOGIN !== 'true') {
+    db.prepare("INSERT OR IGNORE INTO settings (key,value) VALUES ('auth_disabled','1')").run();
+  }
   const count = auth.countUsers();
   if (count > 0) {
     console.log('Database already initialized (admin user exists). Nothing to do.');

@@ -91,7 +91,13 @@ async function startServer(extraEnv = {}) {
 
   // ---- auth ----
   console.log('\n[auth & security]');
-  check('unauthenticated /api/services is rejected', (await req('GET', '/api/services')).status === 401);
+  // Fresh installs default to direct access (no login on localhost).
+  // Turn it OFF first so auth behavior can be tested:
+  check('direct access is enabled by default on localhost',
+    (await req('GET', '/api/services')).status === 200);
+  check('direct access can be disabled without credentials (local request)',
+    (await req('POST', '/api/settings', { body: { auth_disabled: false } })).status === 200);
+  check('unauthenticated /api/services is rejected after disabling direct access', (await req('GET', '/api/services')).status === 401);
   const badLogin = await req('POST', '/api/login', { body: { username: 'admin', password: 'wrong' } });
   check('wrong password rejected', badLogin.status === 401);
   const login = await req('POST', '/api/login', { body: { username: 'admin', password: ADMIN_PW } });

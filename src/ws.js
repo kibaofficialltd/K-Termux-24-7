@@ -28,9 +28,9 @@ function attach(server) {
     let authed = false;
     if (apiKey && auth.verifyApiKey(String(apiKey).trim())) authed = true;
     else if (token && auth.getSession(token)) authed = true;
-    // Direct-access mode: trusted localhost browsers skip login
+    // Direct-access mode (default ON): trusted localhost browsers skip login
     const local = /^(127\.0\.0\.1|::1|::ffff:127\.0\.0\.1)$/.test(req.socket.remoteAddress || '');
-    if (!authed && local && notify.getSetting('auth_disabled', '0') === '1') authed = true;
+    if (!authed && local && notify.getSetting('auth_disabled', '1') === '1') authed = true;
     if (!authed) {
       socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
       socket.destroy();

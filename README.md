@@ -21,9 +21,13 @@ One command — copy-paste this into Termux:
 pkg install -y git nodejs && git clone https://github.com/kibaofficialltd/K-Termux-24-7.git && cd K-Termux-24-7 && bash install.sh && termux-wake-lock
 ```
 
-**During the install you choose your own username and password** — that's what
-you'll use to sign in to the dashboard (input is hidden while typing, and the
-password must be at least 8 characters).
+**During install nothing is asked — the dashboard opens directly with no
+login on the phone** (direct access is on by default, localhost only).
+
+Want a password anyway? Open **Dashboard → Security** and turn off
+*"Skip login on this phone"*, or set `KTERMUX_REQUIRE_LOGIN=1` in `.env`
+before running `install.sh`. Recovery credentials are always written to
+`data/credentials.txt` in case you enable login later.
 
 Then open the dashboard: **http://127.0.0.1:7777/**
 

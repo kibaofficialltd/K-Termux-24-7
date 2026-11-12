@@ -33,35 +33,9 @@ npm install --no-audit --no-fund
 echo "[4/9] Creating directories..."
 mkdir -p data/logs data/backups
 
-# 5. Initialize SQLite + generate secure credentials
-echo "[5/9] Initializing database..."
-if node src/index.js --check-admin 2>/dev/null; then
-  echo "      Admin user already exists - keeping your existing login."
-else
-  echo ""
-  echo "Create your dashboard login (you will use this to sign in):"
-  # username
-  while true; do
-    printf "Username [default: admin]: "
-    read -r IN_USER || { echo; echo "No interactive input available. Re-run install.sh in the Termux app."; exit 1; }
-    IN_USER="${IN_USER:-admin}"
-    if echo "$IN_USER" | grep -qE '^[A-Za-z0-9_-]{3,32}$'; then break; fi
-    echo "  Username must be 3-32 characters: letters, numbers, _ or -. Try again."
-  done
-  # password (hidden input, confirmed twice)
-  while true; do
-    printf "Password (min 8 characters, input hidden): "
-    read -r -s IN_PASS || { echo; echo "No interactive input available. Re-run install.sh in the Termux app."; exit 1; }
-    echo
-    if [ "${#IN_PASS}" -lt 8 ]; then echo "  Too short - at least 8 characters. Try again."; continue; fi
-    printf "Confirm password: "
-    read -r -s IN_PASS2 || { echo; echo "No interactive input available. Re-run install.sh in the Termux app."; exit 1; }
-    echo
-    if [ "$IN_PASS" = "$IN_PASS2" ]; then break; fi
-    echo "  Passwords do not match. Try again."
-  done
-  KTERMUX_ADMIN_USERNAME="$IN_USER" KTERMUX_ADMIN_PASSWORD="$IN_PASS" node src/index.js --init
-fi
+# 5. Initialize SQLite (direct access by default - no login needed on this phone)
+echo "[5/9] Initializing database (direct access, no login)..."
+node src/index.js --init
 
 # 6. Configure startup scripts (Termux:Boot, optional)
 if [ -d "$HOME/.termux/boot" ]; then
@@ -89,7 +63,9 @@ if curl -fsS "http://127.0.0.1:7777/api/health" >/dev/null 2>&1; then
   echo "============================================================"
   echo "  K Termux 24/7 Ultimate is running!"
   echo "  Dashboard: http://127.0.0.1:7777/"
-  echo "  Credentials: cat data/credentials.txt"
+  echo "  Login: OFF (opens directly on this phone)"
+  echo "  Recovery credentials (only if you enable login later):"
+  echo "    cat data/credentials.txt"
   echo "  Keep-alive: run 'termux-wake-lock' now."
   echo "============================================================"
 else
