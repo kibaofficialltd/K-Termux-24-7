@@ -50,6 +50,12 @@ this system makes a phone as reliable as Android allows.
 
 ## Everyday commands
 
+Run them from inside the project folder:
+
+```bash
+cd ~/K-Termux-24-7
+```
+
 | Command | What it does |
 |---|---|
 | `bash start.sh` | Start the server in the background (takes wake-lock) |
@@ -59,6 +65,21 @@ this system makes a phone as reliable as Android allows.
 | `bash backup.sh` | Backup DB + credentials to `data/backups/` |
 | `bash setup-boot.sh` | Install Termux:Boot autostart script |
 | `npm test` | Run the full automated test suite |
+
+💡 **Shortcut — don't type the `cd` every time.** Add this once:
+
+```bash
+echo 'alias kiba="cd ~/K-Termux-24-7"' >> ~/.bashrc && source ~/.bashrc
+```
+
+Then just type `kiba` in Termux to jump into the project folder.
+
+💡 **Or skip `cd` entirely** — every script works from anywhere with the full path:
+
+```bash
+bash ~/K-Termux-24-7/start.sh
+bash ~/K-Termux-24-7/status.sh
+```
 
 ## Architecture
 
