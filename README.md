@@ -13,6 +13,10 @@ Dependencies: express + ws only (both pure JS, Termux-safe)
 
 ---
 
+- **New here? Read [GUIDE.md](GUIDE.md) — the complete step-by-step guide:**
+  adding services, health URLs, command-line tricks, bots, 24/7 setup,
+  remote access and troubleshooting.
+
 ## Quick start (Termux)
 
 One command — copy-paste this into Termux:
